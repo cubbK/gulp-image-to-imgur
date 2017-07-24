@@ -1,28 +1,61 @@
-const Transform = require('stream').Transform;
-const PluginError = require('gulp-util').PluginError;
-const replace = require('stream-buffer-replace');
-
 const PLUGIN_NAME = 'gulp-image-to-imgur';
-
-module.exports = function(opts) {
-    const stream = new Transform({ objectMode: true });
-
-
-    stream._transform = function(file, encoding, cb) {
-        if (file.isNull()) {
-            return cb(null, file);
-        }
-
-        if (file.isStream()) {
-            return cb(new PluginError(PLUGIN_NAME, 'Streaming not supported'));
-        }
-
-        if (file.isBuffer()) {
-            const replacer = replace(new Buffer('YOLO'), new Buffer('HI'))
-                //file.pipe(replacer);
-            console.log(file.contents.toString())
-            cb(null, file);
-        }
-    };
-    return stream;
+var through = require('through2'),
+    gutil = require('gulp-util'),
+    PluginError = gutil.PluginError;
+/**
+ * This method transform the input string to upper/lower case
+ * @param caseType - The transform type upper/lower
+ * @param inputString - The input string
+ * @returns {string} - The transformed string
+ */
+var transformText = function(caseType, inputString) {
+    var outString = null;
+    switch (caseType) {
+        case 'uppercase':
+            outString = inputString.toUpperCase();
+            break;
+        case 'lowercase':
+            outString = inputString.toLowerCase();
+            break;
+        default:
+            outString = inputString;
+            break;
+    }
+    return outString;
 };
+
+/**
+ * This method is used for transforming the text to the target type.
+ * @param caseType
+ */
+var gulpText = function(caseType) {
+    return through.obj(function(file, enc, callback) {
+        var isBuffer = false,
+            inputString = null,
+            result = null,
+            outBuffer = null;
+        //Empty file and directory not supported
+        if (file === null || file.isDirectory()) {
+            this.push(file);
+            return callback();
+        }
+        isBuffer = file.isBuffer();
+        if (isBuffer) {
+            inputString = new String(file.contents);
+            result = transformText(caseType, inputString);
+
+            outBuffer = new Buffer(result);
+            var aFile = new gutil.File(); // gulp expects a vinyl file
+            aFile.path = file.path;
+            aFile.contents = outBuffer;
+            callback(null, aFile); // after everything is done pass the stream 
+        } else {
+            this.emit('error',
+                new PluginError(PLUGIN_NAME,
+                    'Only Buffer format is supported'));
+            callback();
+        }
+    });
+};
+//Export the Method
+module.exports = gulpText;
