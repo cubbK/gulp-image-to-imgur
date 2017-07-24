@@ -1,0 +1,32 @@
+{
+  "name": "gulp-image-to-imgur",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cubbic/gulp-image-to-imgur.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cubbic/gulp-image-to-imgur/issues"
+  },
+  "homepage": "https://github.com/cubbic/gulp-image-to-imgur#readme",
+  "devDependencies": {
+    "imgur": "^0.2.1"
+  },
+  "dependencies": {
+    "buffer-replace": "^1.0.0",
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-transform": "^2.0.0",
+    "gulp-util": "^3.0.8",
+    "replacestream": "^4.0.2",
+    "stream-buffer-replace": "^1.0.1",
+    "through2": "^2.0.3"
+  }
+}
