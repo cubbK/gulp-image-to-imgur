@@ -29,6 +29,7 @@
     "stream-buffer-replace": "^1.0.1",
     "stream-transform": "^0.1.2",
     "through2": "^2.0.3",
-    "vinyl-transform": "^1.0.0"
+    "vinyl-transform": "^1.0.0",
+    "xmldom": "^0.1.27"
   }
 }
